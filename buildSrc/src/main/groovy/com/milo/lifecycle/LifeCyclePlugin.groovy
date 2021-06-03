@@ -1,7 +1,6 @@
 package com.milo.lifecycle
 
-import com.milo.lifecycle.process.DexClassProcess
-import com.milo.lifecycle.process.DexProcess
+import com.milo.lifecycle.process.ClassDexProcess
 import com.milo.lifecycle.utils.PluginUtils
 import com.milo.lifecycle.utils.PluginLog
 import org.gradle.api.Plugin
@@ -29,9 +28,9 @@ class LifeCyclePlugin implements Plugin<Project> {
                     throw new NullPointerException("gradle版本不支持，未找到transformClassesWithDexFor, 目前仅支持1.5-3.0+")
                 }
 
-                def dexProcess = { DexProcess process, File file ->
-                    if (process.shouldProcess()) {
-                        process.process()
+                def dexProcess = { ClassDexProcess process, File file ->
+                    if (process.shouldProcess(file)) {
+                        process.startProcess(file)
                     }
                 }
 
@@ -42,14 +41,10 @@ class LifeCyclePlugin implements Plugin<Project> {
                         Set<File> files = PluginUtils.getFiles(inputFiles)
 
                         files.each { file ->
-                            if (file == null) {
-                                return
-                            }
-
                             if (file.name.endsWith(".jar")) {
 
                             } else if (file.name.endsWith(".class")) {
-                                dexProcess.call(new DexClassProcess(), file)
+                                dexProcess.call(new ClassDexProcess(), file)
                             }
                         }
 

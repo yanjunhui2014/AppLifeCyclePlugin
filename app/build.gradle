@@ -17,6 +17,34 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file("release.jks")
+            storePassword 'android'
+            keyAlias 'cfix'
+            keyPassword 'android'
+        }
+        release {
+            storeFile file("release.jks")
+            storePassword 'android'
+            keyAlias 'cfix'
+            keyPassword 'android'
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
